@@ -1,7 +1,36 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux"; // dataya erişmek için kullanılır
+import { removeCourse } from "../slices/courseSlice";
 
 function CourseList() {
-  return <div>CourseList</div>;
+  const dispatch = useDispatch();
+  const {courses} = useSelector(({ form, courses: { data, searchTerm } }) => {
+    const filteredCourses = data.filter((course) =>
+      course.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    return {
+      courses: filteredCourses,
+    };
+  });
+  const renderedCourses = courses.map((course) => {
+    return (
+      <div className="panel">
+        <h1>{course.name}</h1>
+        <p>{course.description}</p>
+        <p>{course.cost}</p>
+        <button
+          className="button is-danger"
+          onClick={(event) => {
+            dispatch(removeCourse(course.id));
+          }}
+        >
+          Sil
+        </button>
+      </div>
+    );
+  });
+  return <div className="courseList">{renderedCourses}</div>;
 }
 
 export default CourseList;

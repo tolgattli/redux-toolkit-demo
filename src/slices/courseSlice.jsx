@@ -1,5 +1,5 @@
 import React from "react";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 
 const courseSlice = createSlice({
   name: "course",
@@ -7,9 +7,27 @@ const courseSlice = createSlice({
     searchTerm: "",
     data: [],
   },
-  reducers: {},
+  reducers: {
+    addCourse(state, action) {
+      state.data.push({
+        name: action.payload.name,
+        description: action.payload.description,
+        cost: action.payload.cost,
+        id: nanoid(),
+      });
+    },
+    removeCourse(state, action) {
+      const updatedCourses = state.data.filter((course) => {
+        return course.id !== action.payload;
+      });
+      state.data = updatedCourses;
+    },
+    changeSearchTerm(state, action) {
+      state.searchTerm = action.payload;
+    },
+  },
 });
 
-export const {} = courseSlice.actions; // tanımladığımız reducersları ekliyoruz buraya
+export const { addCourse, removeCourse,changeSearchTerm } = courseSlice.actions; // tanımladığımız reducersları ekliyoruz buraya
 
 export default courseSlice.reducer;
